@@ -16,33 +16,49 @@ app.use(cors())
 
 app.get('/location', (request, response) => {
   const locationData = require('./geo.json')
-  // (request.query.data || 'Lynnwood, WA, USA')
   response.send(locationData)
 })
+app.get('/weather', (request, response) => {
+  const weatherData = require('./darksky.json')
+  response.send(weatherData)
+})
+// LAT LONG
 function searchToLatLong (query) {
   const geoData = require('./geo.json')
   const location = new Location(geoData.results[0])
   console.log(location)
+  // const formatted = new Location(geoData.results[0])
+  // console.log(formatted)
+  // const searchQuery = new Location(geoData.results[0])
+  // console.log(searchQuery)
 }
+
 function Location (location) {
+  this.searchQuery = location.address_components[0].long_name
   this.formatted_query = location.formatted_address
   this.latitude = location.geometry.location.lat
   this.longitude = location.geometry.location.lng
 }
 searchToLatLong('Lynwood, WA, USA')
 
-// function searchToLatLong (query) {
-//   const geoData = require('./data/geo.json')
-//   const location = new Location(geoData.results[0])
-//   // data required for front end in Location
-// }
-
-
+// WEATHER
+function searchWeather (query) {
+  const weatherData = require('./darksky.json')
+  const weather = new Weather(weatherData.daily)
+  // console.log(weather.summary)
+}
 // Error Message if Incorrect
+function Weather (weather) {
+  this.forecast = weather.summary
+  console.log(weather.summary)
+  this.time = weather.data[0].time
+  console.log(weather.data[0].time)
+}
+searchWeather('Lynwood, WA, USA')
+
 app.use('*', (request, response) => {
   response.send('sorry that did not work')
 })
 
 // Listener
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
-
