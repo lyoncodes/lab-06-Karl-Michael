@@ -73,7 +73,7 @@ searchWeather('Lynwood, WA, USA')
 
 // Error Message
 app.get('/*', (request, response) => {
-  response.status(404).send('You Have Landed On The Wrong Page')
+  response.status(500).send('You Have Landed On The Wrong Page')
 })
 
 // Listener
