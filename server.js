@@ -15,7 +15,7 @@ app.use(cors())
 // Get Location Data
 
 app.get('/location', (request, response) => {
-  const locationData = require('./geo.json')
+  const locationData = searchToLatLong(request.query.data || 'Lynnwood, WA')
   response.send(locationData)
 })
 app.get('/weather', (request, response) => {
@@ -27,12 +27,14 @@ function searchToLatLong (query) {
   const geoData = require('./geo.json')
   const location = new Location(geoData.results[0])
   console.log(location)
+  return location
   // const formatted = new Location(geoData.results[0])
   // console.log(formatted)
   // const searchQuery = new Location(geoData.results[0])
   // console.log(searchQuery)
 }
 
+// Write function for the displayMap() function on front-end
 function Location (location) {
   this.searchQuery = location.address_components[0].long_name
   this.formatted_query = location.formatted_address
@@ -45,9 +47,8 @@ searchToLatLong('Lynwood, WA, USA')
 function searchWeather (query) {
   const weatherData = require('./darksky.json')
   const weather = new Weather(weatherData.daily)
-  // console.log(weather.summary)
 }
-// Error Message if Incorrect
+
 function Weather (weather) {
   this.forecast = weather.summary
   console.log(weather.summary)
@@ -56,8 +57,9 @@ function Weather (weather) {
 }
 searchWeather('Lynwood, WA, USA')
 
-app.use('*', (request, response) => {
-  response.send('sorry that did not work')
+// Error Message
+app.get('/*', (request, response) => {
+  response.status(404).send('You Have Landed On The Wrong Page')
 })
 
 // Listener
