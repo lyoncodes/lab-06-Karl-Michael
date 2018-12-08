@@ -19,7 +19,7 @@ app.get('/location', (request, response) => {
   response.send(locationData)
 })
 app.get('/weather', (request, response) => {
-  const weatherData = require('./darksky.json')
+  const weatherData = searchWeather(request.query.data || 'Lynwood, WA')
   response.send(weatherData)
 })
 // LAT LONG
@@ -47,6 +47,8 @@ searchToLatLong('Lynwood, WA, USA')
 function searchWeather (query) {
   const weatherData = require('./darksky.json')
   const weather = new Weather(weatherData.daily)
+  console.log(weather)
+  return weather
 }
 
 function Weather (weather) {
